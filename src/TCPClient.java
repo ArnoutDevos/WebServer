@@ -20,6 +20,7 @@ class TCPClient
 			clientSocket.close();
 			if(sentence.equals("exit"))
 				break;
+			//dit is een test.
 			
 		}
 		
