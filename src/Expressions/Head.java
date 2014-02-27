@@ -1,12 +1,10 @@
 package Expressions;
 
 public class Head {
-	String path;
-	String version;
+	String[] arg;
 	
-	public Head(String path, String version) { //throws Exception !!!
-		this.path = path;
-		this.version = version;
+	public Head(String[] arg) { //throws Exception !!!
+		this.arg = arg;
 	}
 
 	public String getResponse(){
