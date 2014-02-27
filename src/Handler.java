@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import Expressions.*;
 
 class Handler implements Runnable
 {
@@ -16,9 +17,11 @@ class Handler implements Runnable
 		DataOutputStream outToClient = new DataOutputStream
 				(connectionSocket.getOutputStream());
 		String clientSentence = inFromClient.readLine();
+		Head head = new Head("/path/example.html","HTTP/1.0");
+		
 		System.out.println("Received: " + clientSentence);
-		String capsSentence = clientSentence.toUpperCase() + '\n';
-		outToClient.writeBytes(capsSentence);
+		//String capsSentence = clientSentence.toUpperCase() + '\n';
+		outToClient.writeBytes(head.getResponse() + '\n');
 		}
 		catch(IOException e){
 			e.printStackTrace();
