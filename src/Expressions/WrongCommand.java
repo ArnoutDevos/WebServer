@@ -2,7 +2,7 @@ package Expressions;
 
 public class WrongCommand extends Head {
 
-	public WrongCommand(String[] tokens){
+	public WrongCommand(String tokens){
 		super(tokens);
 	}
 	

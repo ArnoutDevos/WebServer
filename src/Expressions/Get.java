@@ -2,7 +2,7 @@ package Expressions;
 
 public class Get extends Head {
 
-	public Get(String[] tokens){
+	public Get(String tokens){
 		super(tokens);
 	}
 	

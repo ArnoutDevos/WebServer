@@ -1,9 +1,9 @@
 package Expressions;
 
 public class Head {
-	String[] arg;
+	String arg;
 	
-	public Head(String[] arg) { //throws Exception !!!
+	public Head(String arg) { //throws Exception !!!
 		this.arg = arg;
 	}
 

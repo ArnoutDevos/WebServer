@@ -2,7 +2,7 @@ package Expressions;
 
 public class Put extends Head {
 
-	public Put(String[] tokens){
+	public Put(String tokens){
 		super(tokens);
 	}
 	
