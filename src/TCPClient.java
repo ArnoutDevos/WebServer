@@ -4,10 +4,10 @@ class TCPClient
 {
 	public static void main(String argv[]) throws Exception
 	{
-		while(true){
+		//while(true){
 //			BufferedReader inFromUser = new BufferedReader( new
 //					InputStreamReader(System.in));
-			Socket clientSocket = new Socket(InetAddress.getByName("stackoverflow.com"), 80);
+			Socket clientSocket = new Socket(InetAddress.getByName("example.com"), 80);
 			DataOutputStream outToServer = new DataOutputStream
 					(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new
@@ -27,7 +27,7 @@ class TCPClient
 			//String sentence = inFromUser.readLine();
 			outToServer.writeBytes("GET / HTTP/1.1");
 			outToServer.writeBytes("\r\n");
-			outToServer.writeBytes("Host: stackoverflow.com");
+			outToServer.writeBytes("Host: example.com");
 			outToServer.writeBytes("\r\n");
 			outToServer.writeBytes("\r\n");
 			outToServer.flush();
@@ -44,6 +44,6 @@ class TCPClient
 //	        		response.append(inFromServer.readLine());//response.append(inputLine);
 //				//}
 //			System.out.println(response);
-		}
+		//}
 	}
 }
