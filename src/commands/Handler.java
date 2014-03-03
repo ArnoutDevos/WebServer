@@ -58,9 +58,11 @@ public class Handler implements Runnable
 		     clist.addElement("Get"); alist.addElement(ca);
 		     TransferCommand tc = new TransferCommand(clist,alist);
 		     tc.setRunner(this);
+		     //TODO Is commandmanager needed as handler can store it own commands --> tc.execute()
 		     CommandManager cm = new CommandManager(tc);       
 		                    cm.runCommands();
 		     this.clearBuffer(clist,alist);
+		     
 		     ca2 = new CommandArgument();
 		     ca2.setArgument("/register.html","HTTP/1.0");
 		     clist.addElement("Post"); alist.addElement(ca2);

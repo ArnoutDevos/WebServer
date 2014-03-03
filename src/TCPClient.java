@@ -4,38 +4,45 @@ class TCPClient
 {
 	public static void main(String argv[]) throws Exception
 	{
-		//while(true){
-//			BufferedReader inFromUser = new BufferedReader( new
-//					InputStreamReader(System.in));
-			Socket clientSocket = new Socket(InetAddress.getByName("localhost"), 6789);
-			DataOutputStream outToServer = new DataOutputStream
-					(clientSocket.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new
-					InputStreamReader(clientSocket.getInputStream()));
+		BufferedReader inFromUser = new BufferedReader( new
+				InputStreamReader(System.in));
+		Socket clientSocket = new Socket(InetAddress.getByName("example.com"), 80);
+		DataOutputStream outToServer = new DataOutputStream
+				(clientSocket.getOutputStream());
+		BufferedReader inFromServer = new BufferedReader(new
+				InputStreamReader(clientSocket.getInputStream()));
+		while(true){
+			if(inFromServer.ready()){
+				//clientSocket.close();
+				break;
+			}
 //			String inputLine;
 //	        StringBuilder request = new StringBuilder();
-//				while((inputLine = inFromUser.readLine()) != null){
+//				while(!(inputLine = inFromUser.readLine()).isEmpty()){
 //					request.append(inputLine);
 //				}
-//				System.out.println("REQUEST WAS: " + request.toString());
-//				
-//			if(request.toString().toUpperCase().startsWith("EXIT")){
-//				clientSocket.close();
-//				break;
-//			}
+			String request = inFromUser.readLine();
+			System.out.println("REQUEST WAS: " + request);
+				
+			if(request.equals("\n"))
+				outToServer.writeBytes("\r\n");
+			else
+				outToServer.writeBytes(request + "\r\n");
 			
+			
+			
+			//outToServer.flush();
 			//String sentence = inFromUser.readLine();
-			outToServer.writeBytes("GET / HTTP/1.1");
-			outToServer.writeBytes("\r\n");
-			outToServer.writeBytes("Host: example.com");
-			outToServer.writeBytes("\r\n");
-			outToServer.writeBytes("\r\n");
-			outToServer.flush();
+//			outToServer.writeBytes("GET / HTTP/1.1");
+//			outToServer.writeBytes("\r\n");
+//			outToServer.writeBytes("Host: example.com");
+//			outToServer.writeBytes("\r\n");
+//			outToServer.writeBytes("\r\n");
+//			outToServer.flush();
 			
-			String t;
-			while((t = inFromServer.readLine()) != null) System.out.println(t);
-			inFromServer.close();
-			clientSocket.close();
+			//System.out.println("FROM SERVER:" + inFromServer.readLine());
+			
+			//inFromServer.close();
 			//String modifiedSentence = inFromServer.readLine();
 			
 //			inputLine = null;
@@ -44,6 +51,9 @@ class TCPClient
 //	        		response.append(inFromServer.readLine());//response.append(inputLine);
 //				//}
 //			System.out.println(response);
-		//}
+		}
+		String t;
+		while((t = inFromServer.readLine()) != null) System.out.println(t);
+		clientSocket.close();
 	}
 }
