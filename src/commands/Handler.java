@@ -11,6 +11,8 @@ public class Handler implements Runnable
 	Socket connectionSocket;
 	private CommandArgument arg;
 	private  Vector<Object> clist,alist;
+	private Reader inFromClient;
+	private DataOutput outToClient;
 	public Handler(Socket socket)
 	{ 
 		this.connectionSocket = socket;
@@ -23,10 +25,10 @@ public class Handler implements Runnable
 	{
 		try{
 		//Read the http request from the client into a buffered reader
-		BufferedReader inFromClient = new BufferedReader(new
+		this.inFromClient = new BufferedReader(new
 				InputStreamReader (connectionSocket.getInputStream()));
 		//Create datastream from server to client
-		DataOutputStream outToClient = new DataOutputStream
+		this.outToClient = new DataOutputStream
 				(connectionSocket.getOutputStream());
 		//Let another method do the input/output processing
 		processIO(inFromClient, outToClient);
@@ -37,8 +39,8 @@ public class Handler implements Runnable
 		
 	}
 
-	private void processIO(BufferedReader inFromClient,
-			DataOutputStream outToClient){
+	private void processIO(Reader inFromClient,
+			DataOutput outToClient){
 		//try {
 			//Read the next line that the client submits
 //			String clientSentence = inFromClient.readLine();
@@ -98,13 +100,28 @@ public class Handler implements Runnable
 	     this.arg = arg;
 	 }
 	public void sendStatus(){
-   	 	System.out.println("Status");
+   	 	try {
+			outToClient.writeBytes("status");
+			outToClient.writeBytes("\r\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
      }
     public void sendHeader(){
-   	 	System.out.println("Header");
+    	try {
+			outToClient.writeBytes("Header");
+			outToClient.writeBytes("\r\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 	public void sendBody() {
-		System.out.println("Body");
+		try {
+			outToClient.writeBytes("Body");
+			outToClient.writeBytes("\r\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 }
