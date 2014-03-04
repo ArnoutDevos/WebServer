@@ -1,4 +1,4 @@
-package Expressions;
+package initLine;
 
 public class Post extends Head {
 
@@ -7,7 +7,7 @@ public class Post extends Head {
 	}
 	
 	@Override
-	public String getResponse(){
+	public String execute(){
 		return "HTTP/1.0 203 OK";
 	}
 }

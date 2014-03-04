@@ -1,13 +1,15 @@
-package Expressions;
+package initLine;
 
-public class Head {
+public class Head implements Command{
 	String arg;
 	
 	public Head(String arg) { //throws Exception !!!
 		this.arg = arg;
 	}
 
-	public String getResponse(){
+	@Override
+	public String execute() {
 		return "HTTP/1.0 200 OK";
+		
 	}
 }
