@@ -12,24 +12,26 @@ class TCPClient
 		BufferedReader inFromServer = new BufferedReader(new
 				InputStreamReader(clientSocket.getInputStream()));
 		while(true){
+			String t;
 			if(inFromServer.ready()){
-				//clientSocket.close();
+				while(inFromServer.ready() && (t = inFromServer.readLine()) != null) System.out.println(t);
 				break;
 			}
+			else{
 //			String inputLine;
 //	        StringBuilder request = new StringBuilder();
 //				while(!(inputLine = inFromUser.readLine()).isEmpty()){
 //					request.append(inputLine);
 //				}
+				
 			String request = inFromUser.readLine();
+			if(request.toUpperCase().equals("EXIT")) break;
 			System.out.println("REQUEST WAS: " + request);
 				
-			if(request.equals("\n"))
-				outToServer.writeBytes("\r\n");
-			else
-				outToServer.writeBytes(request + "\r\n");
+			outToServer.writeBytes(request + "\n");
+			outToServer.flush();
 			
-			
+			}
 			
 			//outToServer.flush();
 			//String sentence = inFromUser.readLine();
@@ -52,8 +54,10 @@ class TCPClient
 //				//}
 //			System.out.println(response);
 		}
-		String t;
-		while((t = inFromServer.readLine()) != null) System.out.println(t);
+		//String t;
+		//while((t = inFromServer.readLine()) != null){
+			//System.out.println(t);
 		clientSocket.close();
+		}
+		
 	}
-}
