@@ -1,8 +1,9 @@
 import java.io.*;
 import java.net.*;
 
-import commands.Handler;
+import initLine.Handler;
 //comment
+//server should close the client socket.
 class TCPServerThreaded
 {
 	public static void main(String argv[]) throws Exception

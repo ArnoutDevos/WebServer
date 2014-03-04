@@ -6,16 +6,13 @@ class TCPClient
 	{
 		BufferedReader inFromUser = new BufferedReader( new
 				InputStreamReader(System.in));
-		Socket clientSocket = new Socket(InetAddress.getByName("example.com"), 80);
+		Socket clientSocket = new Socket(InetAddress.getByName("localhost"), 6789);
 		DataOutputStream outToServer = new DataOutputStream
 				(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new
 				InputStreamReader(clientSocket.getInputStream()));
 		while(true){
-			if(inFromServer.ready()){
-				//clientSocket.close();
-				break;
-			}
+
 //			String inputLine;
 //	        StringBuilder request = new StringBuilder();
 //				while(!(inputLine = inFromUser.readLine()).isEmpty()){
@@ -23,13 +20,18 @@ class TCPClient
 //				}
 			String request = inFromUser.readLine();
 			System.out.println("REQUEST WAS: " + request);
-				
-			if(request.equals("\n"))
-				outToServer.writeBytes("\r\n");
-			else
-				outToServer.writeBytes(request + "\r\n");
 			
+			outToServer.writeBytes(request + "\r\n");
 			
+			if(inFromServer.ready()){
+				//clientSocket.close();
+				String t = inFromServer.readLine();
+				System.out.println(t);
+				break;
+			}
+			
+//			String t = inFromServer.readLine();
+//			System.out.println(t);
 			
 			//outToServer.flush();
 			//String sentence = inFromUser.readLine();
@@ -52,8 +54,8 @@ class TCPClient
 //				//}
 //			System.out.println(response);
 		}
-		String t;
-		while((t = inFromServer.readLine()) != null) System.out.println(t);
-		clientSocket.close();
+
+//		String t;
+//		while((t = inFromServer.readLine()) != null) System.out.println(t);
 	}
 }
