@@ -1,9 +1,14 @@
 import java.io.*;
 import java.net.*;
+/* Command Examples
+ * GET /lenna.html HTTP/1.1
+ * Host: www.arnoutdevos.net
+ */
 class TCPClient
 {
 	public static void main(String argv[]) throws Exception
 	{
+<<<<<<< HEAD
 		BufferedReader inFromUser = new BufferedReader( new
 				InputStreamReader(System.in));
 		Socket clientSocket = new Socket(InetAddress.getByName("localhost"), 6789);
@@ -11,8 +16,18 @@ class TCPClient
 				(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new
 				InputStreamReader(clientSocket.getInputStream()));
+=======
+>>>>>>> b2927367fef33fab11a7347a543f1cfcd5a67ca9
 		while(true){
+			BufferedReader inFromUser = new BufferedReader( new
+					InputStreamReader(System.in));
+			Socket clientSocket = new Socket(InetAddress.getByName("www.arnoutdevos.net"), 80);
+			DataOutputStream outToServer = new DataOutputStream
+					(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new
+					InputStreamReader(clientSocket.getInputStream()));
 			String t;
+<<<<<<< HEAD
 			if(inFromServer.ready()){
 				
 				while(inFromServer.ready()){
@@ -49,21 +64,49 @@ class TCPClient
 //			outToServer.writeBytes("\r\n");
 //			outToServer.writeBytes("\r\n");
 //			outToServer.flush();
+=======
+>>>>>>> b2927367fef33fab11a7347a543f1cfcd5a67ca9
 			
-			//System.out.println("FROM SERVER:" + inFromServer.readLine());
+			while(!inFromServer.ready()){
+				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
+				outToServer.flush();
+				System.out.println("REQUEST WAS: " + t);
+			}
+			t = "";
+			while(inFromServer.ready()){
+				t += inFromServer.readLine() + "\n";
+			}
+			System.out.println(t);
+			Document doc = Jsoup.parse(t);
+			Elements media = doc.select("[src]");
+			System.out.println("Retrieving embedded elements.");
+			for (Element src : media) {
+				String temp = src.absUrl("src");
+				System.out.println("Sourcetje: " + temp);
+				URL url = new URL(temp);
+				temp = url.getHost();
+				System.out.println("sitetje = " + temp);
+				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80);
+				DataOutputStream outToServerEmbedded = new DataOutputStream
+						(clientSocketEmbedded.getOutputStream());
+				BufferedReader inFromServerEmbedded = new BufferedReader(new
+						InputStreamReader(clientSocketEmbedded.getInputStream()));
+				System.out.println("GET request: " + "GET " + src.attr("src") + " HTTP 1.1\r\n");
+				outToServerEmbedded.writeBytes("GET " + src.attr("src") + " HTTP 1.1\r\n");
+				outToServerEmbedded.writeBytes("Host: " + temp + " HTTP 1.1\r\n");
+				outToServerEmbedded.writeBytes("\r\n");
+				outToServer.flush();
+				String result = "";
+				while(!inFromServerEmbedded.ready())
+				while(!((temp = inFromServerEmbedded.readLine()) == null) && !(temp.isEmpty())){
+					result += temp + "\n";
+				}
+				System.out.println(result);
+				clientSocketEmbedded.close();
+	        }
 			
-			//inFromServer.close();
-			//String modifiedSentence = inFromServer.readLine();
-			
-//			inputLine = null;
-//	        StringBuilder response = new StringBuilder();
-//				//while((inputLine = inFromServer.readLine()) != null){
-//	        		response.append(inFromServer.readLine());//response.append(inputLine);
-//				//}
-//			System.out.println(response);
+			clientSocket.close();
+			}
 		}
-		clientSocket.close();
-//		String t;
-//		while((t = inFromServer.readLine()) != null) System.out.println(t);
+		
 	}
-}

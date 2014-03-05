@@ -2,7 +2,7 @@ package initLine;
 
 public class Post extends Head {
 
-	public Post(String tokens){
+	public Post(String[] tokens){
 		super(tokens);
 	}
 	

@@ -1,15 +1,15 @@
 package initLine;
 
-public class WrongCommand implements Command {
+public class WrongCommand extends Command {
 
-	String clientSentence;
+	String[] clientSentence;
 	
-	public WrongCommand(String clientSentence){
+	public WrongCommand(String[] clientSentence){
 		this.clientSentence = clientSentence;
 	}
 	
 	@Override
 	public String execute(){
-		return "Wrong command: " + this.clientSentence;
+		return "Wrong command! \n" + super.execute();
 	}
 }
