@@ -34,6 +34,7 @@ class TCPClient
 			System.out.println(t);
 			Document doc = Jsoup.parse(t);
 			Elements media = doc.select("[src]");
+			System.out.println("Retrieving embedded elements.");
 			for (Element src : media) {
 				String temp = src.absUrl("src");
 				System.out.println("Sourcetje: " + temp);
@@ -45,6 +46,7 @@ class TCPClient
 						(clientSocketEmbedded.getOutputStream());
 				BufferedReader inFromServerEmbedded = new BufferedReader(new
 						InputStreamReader(clientSocketEmbedded.getInputStream()));
+				System.out.println("GET request: " + "GET " + src.attr("src") + " HTTP 1.1\r\n");
 				outToServerEmbedded.writeBytes("GET " + src.attr("src") + " HTTP 1.1\r\n");
 				outToServerEmbedded.writeBytes("Host: " + temp + " HTTP 1.1\r\n");
 				outToServerEmbedded.writeBytes("\r\n");
