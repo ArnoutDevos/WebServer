@@ -24,33 +24,33 @@ class TCPClient
 			
 			while(!inFromServer.ready()){
 				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
-//				outToServer.flush();
+				outToServer.flush();
 //				System.out.println("REQUEST WAS: " + t);
 			}
 			t = "";
 			while(inFromServer.ready()){
 				t += inFromServer.readLine() + "\n";
 			}
-			Document doc = Jsoup.parse(t);
-			Elements media = doc.select("[src]");
-			for (Element src : media) {
-				String temp = src.absUrl("src");
-				String tempArray[] = temp.split("/");
-				System.out.println("sitetje = " + tempArray[0]);
-				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(tempArray[0]), 80);
-				DataOutputStream outToServerEmbedded = new DataOutputStream
-						(clientSocketEmbedded.getOutputStream());
-				BufferedReader inFromServerEmbedded = new BufferedReader(new
-						InputStreamReader(clientSocketEmbedded.getInputStream()));
-				outToServerEmbedded.writeBytes("GET " + src.attr("src") + " HTTP 1.1\n");
-				outToServerEmbedded.writeBytes("Host: " + src.attr("src") + " HTTP 1.1\n");
-				String result = "";
-				while(!(temp = inFromServerEmbedded.readLine()).isEmpty()){
-					result += temp + "\n";
-				}
-				System.out.println(result);
-				clientSocketEmbedded.close();
-	        }
+//			Document doc = Jsoup.parse(t);
+//			Elements media = doc.select("[src]");
+//			for (Element src : media) {
+//				String temp = src.absUrl("src");
+//				String tempArray[] = temp.split("/");
+//				System.out.println("sitetje = " + tempArray[0]);
+//				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(tempArray[0]), 80);
+//				DataOutputStream outToServerEmbedded = new DataOutputStream
+//						(clientSocketEmbedded.getOutputStream());
+//				BufferedReader inFromServerEmbedded = new BufferedReader(new
+//						InputStreamReader(clientSocketEmbedded.getInputStream()));
+//				outToServerEmbedded.writeBytes("GET " + src.attr("src") + " HTTP 1.1\n");
+//				outToServerEmbedded.writeBytes("Host: " + src.attr("src") + " HTTP 1.1\n");
+//				String result = "";
+//				while(!(temp = inFromServerEmbedded.readLine()).isEmpty()){
+//					result += temp + "\n";
+//				}
+//				System.out.println(result);
+//				clientSocketEmbedded.close();
+//	        }
 			System.out.println(t);
 			clientSocket.close();
 			}
