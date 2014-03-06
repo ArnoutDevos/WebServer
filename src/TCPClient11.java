@@ -56,9 +56,9 @@ class TCPClient11
 				System.out.println("REQUEST WAS: " + t);
 			}
 			//Start Pipeline test
-			String u = "GET / HTTP/1.1\r\n"+"Host: " + adress + "\r\n\r\n";
-			outToServer.writeBytes(u);//Pipeline test
-			System.out.println("PIPE REQUEST WAS: " + u);
+//			String u = "GET / HTTP/1.1\r\n"+"Host: " + adress + "\r\n\r\n";
+//			outToServer.writeBytes(u);//Pipeline test
+//			System.out.println("PIPE REQUEST WAS: " + u);
 			//Stop Pipeline test
 			t = "";
 			System.out.println("Retrieving file.");
