@@ -1,5 +1,12 @@
 import java.io.*;
 import java.net.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+
+
 /* Command Examples
  * GET /lenna.html HTTP/1.1
  * Host: www.arnoutdevos.net
@@ -8,16 +15,6 @@ class TCPClient
 {
 	public static void main(String argv[]) throws Exception
 	{
-<<<<<<< HEAD
-		BufferedReader inFromUser = new BufferedReader( new
-				InputStreamReader(System.in));
-		Socket clientSocket = new Socket(InetAddress.getByName("localhost"), 6789);
-		DataOutputStream outToServer = new DataOutputStream
-				(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new
-				InputStreamReader(clientSocket.getInputStream()));
-=======
->>>>>>> b2927367fef33fab11a7347a543f1cfcd5a67ca9
 		while(true){
 			BufferedReader inFromUser = new BufferedReader( new
 					InputStreamReader(System.in));
@@ -27,45 +24,6 @@ class TCPClient
 			BufferedReader inFromServer = new BufferedReader(new
 					InputStreamReader(clientSocket.getInputStream()));
 			String t;
-<<<<<<< HEAD
-			if(inFromServer.ready()){
-				
-				while(inFromServer.ready()){
-					t = inFromServer.readLine();
-					System.out.println(t);
-				}
-				break;
-			}
-//			String inputLine;
-//	        StringBuilder request = new StringBuilder();
-//				while(!(inputLine = inFromUser.readLine()).isEmpty()){
-//					request.append(inputLine);
-//				}
-			
-			String request = inFromUser.readLine();
-			System.out.println("REQUEST WAS: " + request);
-			outToServer.writeBytes(request + "\r\n");
-			outToServer.flush();
-//			if(inFromServer.ready()){
-//				//clientSocket.close();
-//				String t = inFromServer.readLine();
-//				System.out.println(t);
-//				break;
-//			}
-			
-//			String t = inFromServer.readLine();
-//			System.out.println(t);
-			
-			//outToServer.flush();
-			//String sentence = inFromUser.readLine();
-//			outToServer.writeBytes("GET / HTTP/1.1");
-//			outToServer.writeBytes("\r\n");
-//			outToServer.writeBytes("Host: example.com");
-//			outToServer.writeBytes("\r\n");
-//			outToServer.writeBytes("\r\n");
-//			outToServer.flush();
-=======
->>>>>>> b2927367fef33fab11a7347a543f1cfcd5a67ca9
 			
 			while(!inFromServer.ready()){
 				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
@@ -91,8 +49,8 @@ class TCPClient
 				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80);
 				DataOutputStream outToServerEmbedded = new DataOutputStream
 						(clientSocketEmbedded.getOutputStream());
-				BufferedReader inFromServerEmbedded = new BufferedReader(new
-						InputStreamReader(clientSocketEmbedded.getInputStream()));
+//				BufferedReader inFromServerEmbedded = new BufferedReader(new
+//						InputStreamReader(clientSocketEmbedded.getInputStream()));
 //				File mediaFile = new File("C:\\");
 //				FileOutputStream fileStream = new FileOutputStream(mediaFile);
 				String filename = extractFileName(url.getPath());
