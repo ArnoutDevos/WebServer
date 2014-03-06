@@ -11,7 +11,7 @@ import org.jsoup.select.Elements;
  * GET /lenna.html HTTP/1.1
  * Host: www.arnoutdevos.net
  */
-class TCPClient
+class TCPClient10
 {
 	public static void main(String argv[]) throws Exception
 	{
@@ -26,7 +26,6 @@ class TCPClient
 	    {
 			System.out.println("Wrong input arg. Now using default adress and port: "+adress+":"+port);
 	    }
-		while(true){
 			BufferedReader inFromUser = new BufferedReader( new
 					InputStreamReader(System.in));
 			Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
@@ -47,21 +46,22 @@ class TCPClient
 				t += inFromServer.readLine() + "\n";
 			}
 			System.out.println(t);
-			clientSocket.close();
+			clientSocket.close(); //HTTP 1.0 style
+			
 			Document doc = Jsoup.parse(t);
 			Elements media = doc.select("[src]");
 			System.out.println("Retrieving embedded elements.");
 			for (Element src : media) {
-				
 				String temp = src.absUrl("src");
 				if(temp.equals("")){
-					src.setBaseUri(adress);
+					src.setBaseUri("http://"+adress);
 					temp = src.absUrl("src");
 				}
 				System.out.println("Sourcetje: " + temp);
 				URL url = new URL(temp);
 				temp = url.getHost();
 				System.out.println("sitetje = " + temp);
+				
 				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80);
 				DataOutputStream outToServerEmbedded = new DataOutputStream
 						(clientSocketEmbedded.getOutputStream());
@@ -85,8 +85,8 @@ class TCPClient
 				 int read = 0;
 				 int offset = 0;
 				 String decoded = null;
-					byte[] bytes = new byte[30000];
-					while ((read = inputStream.read(bytes,offset,1)) != -1) {
+					byte[] bytes = new byte[16000];//Max header size
+					while ((read = inputStream.read(bytes,offset,1)) != -1) {//Read blocks until data is available
 						offset++;
 						decoded = new String(bytes, "UTF-8");
 						if(decoded.contains("\r\n\r\n")) {
@@ -119,7 +119,6 @@ class TCPClient
 			
 			
 			}
-		}
 	 private static String extractFileName(String path) {
 		    if ( path == null)
 		      return null;

@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,7 +13,7 @@ import org.jsoup.select.Elements;
  * GET /lenna.html HTTP/1.1
  * Host: www.arnoutdevos.net
  */
-class TCPClient
+class TCPClient11
 {
 	public static void main(String argv[]) throws Exception
 	{
@@ -27,9 +29,13 @@ class TCPClient
 			System.out.println("Wrong input arg. Now using default adress and port: "+adress+":"+port);
 	    }
 		while(true){
+			HashMap<String, Socket> connections = new HashMap<String, Socket>();
 			BufferedReader inFromUser = new BufferedReader( new
 					InputStreamReader(System.in));
 			Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
+			
+			connections.put(adress, clientSocket);
+			
 			DataOutputStream outToServer = new DataOutputStream
 					(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new
@@ -48,18 +54,19 @@ class TCPClient
 			}
 			System.out.println(t);
 			clientSocket.close();
+			
 			Document doc = Jsoup.parse(t);
 			Elements media = doc.select("[src]");
 			System.out.println("Retrieving embedded elements.");
 			for (Element src : media) {
-				
 				String temp = src.absUrl("src");
+				String completeUrl=temp;
 				if(temp.equals("")){
-					src.setBaseUri(adress);
-					temp = src.absUrl("src");
+					src.setBaseUri("http://"+adress);
+					completeUrl = src.absUrl("src");
 				}
-				System.out.println("Sourcetje: " + temp);
-				URL url = new URL(temp);
+				System.out.println("Sourcetje: " + completeUrl);
+				URL url = new URL(completeUrl);
 				temp = url.getHost();
 				System.out.println("sitetje = " + temp);
 				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80);
