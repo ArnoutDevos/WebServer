@@ -41,7 +41,12 @@ class TCPClient
 			Elements media = doc.select("[src]");
 			System.out.println("Retrieving embedded elements.");
 			for (Element src : media) {
+				
 				String temp = src.absUrl("src");
+				if(temp.equals("")){
+					src.setBaseUri("http://www.arnoutdevos.net");
+					temp = src.absUrl("src");
+				}
 				System.out.println("Sourcetje: " + temp);
 				URL url = new URL(temp);
 				temp = url.getHost();
@@ -93,6 +98,7 @@ class TCPClient
 				while ((read = inputStream.read(bytes)) != -1) {
 					outputStream.write(bytes, 0, read);
 				}
+				outputStream.close();
 		 
 				System.out.println("Done!");
 				
