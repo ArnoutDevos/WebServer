@@ -8,14 +8,14 @@ public class Put extends Head {
 
 	private BufferedReader inFromClient;
 	private String body;
-	private boolean succes;
+	protected boolean succes;
 	
 	public Put(String[] clientSentence, DataOutputStream outToClient, BufferedReader inFromClient){
 		super(clientSentence, outToClient);
 		this.inFromClient = inFromClient;
 	}
 	
-	
+	@Override
 	public String getResponse() {
 		String output = "HTTP/1.0 ";
 		if(succes){
