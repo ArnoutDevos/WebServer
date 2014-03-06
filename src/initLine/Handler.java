@@ -37,39 +37,32 @@ public class Handler implements Runnable
 	
 
 	private void processIO(BufferedReader inFromClient, DataOutputStream outToClient) throws IOException {
-		// echo server:
-//		 String clientSentence = inFromClient.readLine();
-//		 System.out.println("Received: " + clientSentence);
-//		 String capsSentence = clientSentence.toUpperCase() + '\n';
-//		 outToClient.writeBytes(capsSentence);
-//		 connectionSocket.close();
-//		 System.out.println("Connection closed.");
-		boolean ready = false;
+
+		
+		String input = "";
 		String clientSentence = "";
-		while(!ready){
-			clientSentence += inFromClient.readLine() + "\r\n";
-			System.out.println("Received: " + clientSentence);
-			if(clientSentence.endsWith("b"))
-				ready = true;
+		while(!(input = inFromClient.readLine()).equals("")){
+			clientSentence += input + " ";
 		}
+		System.out.println("Received: " + clientSentence);
+		
 		Command command = makeCommand(clientSentence);
-		outToClient.writeBytes(command.execute() + "\n");
+		command.execute();
 //		connectionSocket.close();
 //		System.out.println("Connection closed.");
 	}
 
 	private Command makeCommand(String clientSentence) {
-		//String[] tokens = clientSentence.split(" ");
-		//String command = tokens[0].toUpperCase();
-		String tmp = clientSentence.toUpperCase();
-		if(tmp.startsWith("HEAD"))
-			return new Head(clientSentence);
-//		if(tmp.startsWith("GET"))
-//			return new Get(clientSentence);
-//		if(tmp.startsWith("PUT"))
-//			return new Put(clientSentence);
-//		if(tmp.startsWith("POST"))
-//			return new Post(clientSentence);
-		return new WrongCommand(clientSentence);
+		String[] tokens = clientSentence.split(" ");
+		String command = tokens[0].toUpperCase();
+		if(command.equals("HEAD"))
+			return new Head(tokens, outToClient);
+		if(command.equals("GET"))
+			return new Get(tokens, outToClient);
+		if(command.equals("PUT"))
+			return new Put(tokens, inFromClient, outToClient);
+		if(command.equals("POST"))
+			return new Post(tokens, inFromClient, outToClient);
+		return new WrongCommand(tokens, inFromClient, outToClient);
 	}
 }

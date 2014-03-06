@@ -1,13 +1,26 @@
 package initLine;
 
-public class Get extends Head {
+import java.io.*;
 
-	public Get(String tokens){
-		super(tokens);
+public class Get extends Head {
+	
+	
+	public Get(String[] clientSentence, DataOutputStream outToClient){
+		super(clientSentence, outToClient);
 	}
 	
 	@Override
-	public String execute(){
-		return "HTTP/1.0 201 OK";
+	public String getResponse(){
+		String output = super.getResponse() + "\n";
+		try{
+		BufferedReader br = new BufferedReader(new FileReader(clientSentence[1]));
+		 String line = null;
+		 while ((line = br.readLine()) != null) {
+		   output += "\n" + line;
+		 }
+		}catch(Exception e){
+			output += "\n File not found.";
+		}
+		return output;
 	}
 }
