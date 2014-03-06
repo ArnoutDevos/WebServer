@@ -60,15 +60,18 @@ class TCPClient11
 //			outToServer.writeBytes(u);//Pipeline test
 //			System.out.println("PIPE REQUEST WAS: " + u);
 			//Stop Pipeline test
-			t = "";
+			//t = "";
+			String tmp;
 			System.out.println("Retrieving file.");
+			StringBuilder sBuffer = new StringBuilder();
 			while(inFromServer.ready()){
-				t += inFromServer.readLine() + "\n";
+				sBuffer.append(tmp = inFromServer.readLine() + "\n");
+				//System.out.println(tmp+"\n");
 			}
-			System.out.println(t);
+			System.out.println(sBuffer);
 			clientSocket.close();
 			
-			Document doc = Jsoup.parse(t);
+			Document doc = Jsoup.parse(sBuffer.toString());
 			Elements media = doc.select("[src]");
 			System.out.println("Retrieving embedded elements.");
 			
