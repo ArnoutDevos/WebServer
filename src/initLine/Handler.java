@@ -60,9 +60,9 @@ public class Handler implements Runnable
 		if(command.equals("GET"))
 			return new Get(tokens, outToClient);
 		if(command.equals("PUT"))
-			return new Put(tokens, inFromClient, outToClient);
-		if(command.equals("POST"))
-			return new Post(tokens, inFromClient, outToClient);
-		return new WrongCommand(tokens, inFromClient, outToClient);
+			return new Put(tokens, outToClient, inFromClient);
+//		if(command.equals("POST"))
+//			return new Post(tokens, inFromClient, outToClient);
+		return new WrongCommand(tokens, outToClient);
 	}
 }

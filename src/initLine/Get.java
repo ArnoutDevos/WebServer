@@ -19,8 +19,7 @@ public class Get extends Head {
 		   output += "\n" + line;
 		 }
 		}catch(Exception e){
-			output += "\n File not found.";
 		}
-		return output;
+		return output + "\n";
 	}
 }

@@ -8,33 +8,29 @@ public class Put extends Head {
 
 	private BufferedReader inFromClient;
 	private String body;
+	private boolean succes;
 	
 	public Put(String[] clientSentence, DataOutputStream outToClient, BufferedReader inFromClient){
 		super(clientSentence, outToClient);
 		this.inFromClient = inFromClient;
 	}
 	
-	public String getResponse(boolean succes) {
+	
+	public String getResponse() {
 		String output = "HTTP/1.0 ";
-		String fileName = clientSentence[1];
-		File f = new File(fileName);
-		if(f.exists() && !f.isDirectory()) { 
-			output += "200 OK";
-			MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-			output += "\n" + "Content-type: " + mimeTypesMap.getContentType(f);
-			output += "\n" + "Content-length: " + f.length();
-		} else {
-			output += "500 Server Error (File not found)";
-		}
+		if(succes){
+			output += "201 Created";
+		} else
+			output += "500 Server Error";
+		output += "\n" + getDate() + "\n" + getServer() + "\n";
 		
-		output += "\n" + super.getResponse();
 		return output;
 		
 	}
 	
 	@Override
 	public void execute() throws IOException{
-		boolean succes = false; //to indicate whether the file upload was succesful.
+		succes = false; //to indicate whether the file upload was succesful.
 		body = "";
 		String input;
 		while(!(input = inFromClient.readLine()).equals("")){
@@ -42,10 +38,12 @@ public class Put extends Head {
 		}
 		try{
 			PrintWriter out = new PrintWriter(clientSentence[1]);
-			out.println(input);
+			out.println(body);
 			out.close();
+			succes = true;
 		}catch(Exception e){
-			
+			succes = false;
 		}
+		outToClient.writeBytes(getResponse());
 	}
 }
