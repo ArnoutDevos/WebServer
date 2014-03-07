@@ -17,12 +17,15 @@ import org.jsoup.select.Elements;
 /* Command Examples
  * GET /lenna.html HTTP/1.1
  * Host: www.arnoutdevos.net
+ * 
+ * POST /form/form.php HTTP/1.1
+ * Host: www.4serendipity.com
  */
 class TCPClient11
 {
 	public static void main(String argv[]) throws Exception
 	{
-		String adress = "www.arnoutdevos.net";
+		String adress = "www.4serendipity.com";
 		int port = 80;
 		
 		if(argv.length == 2){
