@@ -1,7 +1,6 @@
 package initLine;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class WrongCommand extends Command {
 
@@ -15,7 +14,10 @@ public class WrongCommand extends Command {
 	
 	@Override
 	public String getResponse(){
-		return "Wrong command! \n" + super.getResponse();
+		String glued = "";
+		for(int i = 0; i < clientSentence.length; i++)
+			glued += clientSentence[i] + " ";
+		return "500 Server Error \nWrong command! \n" + glued + "\n" + super.getResponse();
 	}
 	
 	public void execute() throws IOException{

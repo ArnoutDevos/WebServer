@@ -11,7 +11,7 @@ public class Get extends Head {
 	
 	@Override
 	public String getResponse(){
-		String output = super.getResponse() + "\n";
+		String output = super.getResponse();
 		try{
 		BufferedReader br = new BufferedReader(new FileReader(clientSentence[1]));
 		 String line = null;

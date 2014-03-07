@@ -1,7 +1,5 @@
 package initLine;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -27,7 +25,7 @@ public class Head extends Command{
 			output += "\n" + "Content-type: " + mimeTypesMap.getContentType(f);
 			output += "\n" + "Content-length: " + f.length();
 		} else {
-			output += "500 Server Error (File not found)";
+			output += "404 Not Found";
 		}
 		
 		output += "\n" + super.getResponse();
