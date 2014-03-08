@@ -75,6 +75,8 @@ class TCPClient11
 				//System.out.println(tmp+"\n");
 			}
 			System.out.println(sBuffer);
+			clientSocket.getInputStream().close();
+			clientSocket.getOutputStream().close();
 			clientSocket.close();
 			
 			Document doc = Jsoup.parse(sBuffer.toString());
