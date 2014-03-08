@@ -25,7 +25,7 @@ class TCPClient11
 {
 	public static void main(String argv[]) throws Exception
 	{
-		String adress = "www.4serendipity.com";
+		String adress = "www.arnoutdevos.net";
 		int port = 80;
 		
 		if(argv.length == 2){
@@ -121,6 +121,7 @@ class TCPClient11
 				outToServerEmbedded.writeBytes(request);
 				outToServer.flush();
 				
+				//java.util.concurrent.TimeUnit.SECONDS.sleep(1);//Disable the pipeline
 				lookForData(connections);
 				//clientSocketEmbedded.close();
 	        }
