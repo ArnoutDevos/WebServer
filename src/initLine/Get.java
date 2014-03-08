@@ -11,14 +11,18 @@ public class Get extends Head {
 	
 	@Override
 	public String getResponse(){
-		String output = super.getResponse();
+		String output = super.getResponse() + "\r\n";
 		try{
-		BufferedReader br = new BufferedReader(new FileReader(clientSentence[1]));
-		 String line = null;
-		 while ((line = br.readLine()) != null) {
-		   output += "\n" + line;
-		 }
+			String fileName = clientSentence[1];
+			if(fileName.contains("/"))
+				fileName = fileName.substring(1);
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			 String line = null;
+			 while ((line = br.readLine()) != null) {
+			   output += line + "\n";
+			 }
 		}catch(Exception e){
+			output += "404 Not Found";
 		}
 		return output + "\n";
 	}

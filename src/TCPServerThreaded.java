@@ -16,6 +16,7 @@ class TCPServerThreaded
 				Handler h = new Handler(connectionSocket);
 				Thread thread = new Thread(h);
 				thread.start();
+				System.out.println("after thread.start.");
 			}
 		}
 	}

@@ -18,6 +18,8 @@ public class Head extends Command{
 	public String getResponse() {
 		String output = "HTTP/1.0 ";
 		String fileName = clientSentence[1];
+		if(fileName.contains("/"))
+			fileName = fileName.substring(1);
 		File f = new File(fileName);
 		if(f.exists() && !f.isDirectory()) { 
 			output += "200 OK";

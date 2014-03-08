@@ -2,12 +2,10 @@ package initLine;
 
 import java.io.*;
 
-import javax.activation.MimetypesFileTypeMap;
-
 public class Put extends Head {
 
-	private BufferedReader inFromClient;
-	private String body;
+	protected BufferedReader inFromClient;
+	protected String body;
 	protected boolean succes;
 	
 	public Put(String[] clientSentence, DataOutputStream outToClient, BufferedReader inFromClient){

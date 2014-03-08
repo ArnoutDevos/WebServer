@@ -25,8 +25,8 @@ class TCPClient11
 {
 	public static void main(String argv[]) throws Exception
 	{
-		String adress = "www.4serendipity.com";
-		int port = 80;
+		String adress = "localhost";
+		int port = 6789;
 		
 		if(argv.length == 2){
 			adress = argv[0];

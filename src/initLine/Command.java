@@ -11,7 +11,7 @@ public abstract class Command {
     public abstract void execute() throws IOException;
     
     public String getResponse(){
-    	return getDate() + "\n" + getServer() + "\n";
+    	return getDate() + "\n" + getServer() + "\r\n";
     }
     
     public String getDate(){

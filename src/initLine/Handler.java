@@ -41,13 +41,17 @@ public class Handler implements Runnable
 		
 		String input = "";
 		String clientSentence = "";
-		while(!(input = inFromClient.readLine()).equals("")){
+		while((input = inFromClient.readLine()) != null && !input.equals("")){
 			clientSentence += input + " ";
 		}
 		System.out.println("Received: " + clientSentence);
 	
 		Command command = makeCommand(clientSentence);
 		command.execute();
+		System.out.println("after command.execute().");
+		//The next two lines have to be comment when using our own client
+		outToClient.close();
+		inFromClient.close();
 //		connectionSocket.close();
 //		System.out.println("Connection closed.");
 	}

@@ -1,7 +1,6 @@
 package initLine;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import java.io.*;
 
 public class Post extends Put {
 
@@ -20,6 +19,27 @@ public class Post extends Put {
 		
 		return output;
 		
+	}
+	
+	@Override
+	public void execute() throws IOException{
+		succes = false; //to indicate whether the file upload was succesful.
+		body = "";
+		String input;
+		body = "Posted at: " + getDate() + "\n";
+		while(!(input = inFromClient.readLine()).equals("")){
+			body += input + "\n";
+		}
+		try {
+		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(clientSentence[1], true)));
+		    out.println(body);
+		    out.close();
+		    succes = true;
+		} catch (IOException e) {
+			succes = false;
+		}
+		
+		outToClient.writeBytes(getResponse());
 	}
 	
 }
