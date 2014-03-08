@@ -155,6 +155,8 @@ class TCPClient11
 			outputStream.close();
 			inputStream.close();
 			if(!possibleReader.ready()){
+				possibleConnection.getInputStream().close();
+				possibleConnection.getOutputStream().close();
 				possibleConnection.close();
 			}
 			itr.remove();
