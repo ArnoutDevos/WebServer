@@ -48,7 +48,7 @@ public class Handler implements Runnable
 	
 		Command command = makeCommand(clientSentence);
 		command.execute();
-		System.out.println("after command.execute().");
+//		System.out.println("after command.execute().");
 		//The next two lines have to be comment when using our own client
 		outToClient.close();
 		inFromClient.close();

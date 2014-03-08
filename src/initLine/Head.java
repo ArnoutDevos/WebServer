@@ -19,21 +19,17 @@ public class Head extends Command{
 		String fileName = clientSentence[1];
 		if(fileName.contains("/"))
 			fileName = fileName.substring(1);
-		String extension = "";
-		int i = fileName.lastIndexOf('.');
-		if (i > 0) {
-		    extension = fileName.substring(i+1);
-		}
 		File f = new File(fileName);
 		if(f.exists() && !f.isDirectory()) { 
 			output += "200 OK";
-			output += "\n" + "Content-type: " + extension;
+			output += "\n" + "Content-type: " + makeExtension(fileName);
 			output += "\n" + "Content-length: " + f.length();
 		} else {
 			output += "404 Not Found";
 		}
 		
 		output += "\n" + super.getResponse();
+		
 		return output;
 		
 	}
@@ -41,5 +37,18 @@ public class Head extends Command{
 	@Override
 	public void execute() throws IOException{
 		outToClient.writeBytes(getResponse());
+	}
+	
+	public String makeExtension(String fileName){
+		String extension = "";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		    extension = fileName.substring(i+1);
+		}
+		if(extension.equals("html"))
+			extension = "text/html";
+		else if(extension.equals("jpg") || extension.equals("jpeg"))
+			extension = "image/jpeg";
+		return extension;
 	}
 }
