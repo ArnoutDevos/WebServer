@@ -1,7 +1,6 @@
 package initLine;
 import java.io.*;
 
-import javax.activation.MimetypesFileTypeMap;
 
 
 public class Head extends Command{
@@ -20,11 +19,15 @@ public class Head extends Command{
 		String fileName = clientSentence[1];
 		if(fileName.contains("/"))
 			fileName = fileName.substring(1);
+		String extension = "";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		    extension = fileName.substring(i+1);
+		}
 		File f = new File(fileName);
 		if(f.exists() && !f.isDirectory()) { 
 			output += "200 OK";
-			MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-			output += "\n" + "Content-type: " + mimeTypesMap.getContentType(f);
+			output += "\n" + "Content-type: " + extension;
 			output += "\n" + "Content-length: " + f.length();
 		} else {
 			output += "404 Not Found";

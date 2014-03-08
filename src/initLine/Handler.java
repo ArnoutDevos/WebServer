@@ -52,6 +52,7 @@ public class Handler implements Runnable
 		//The next two lines have to be comment when using our own client
 		outToClient.close();
 		inFromClient.close();
+		// sluiten als 
 //		connectionSocket.close();
 //		System.out.println("Connection closed.");
 	}
