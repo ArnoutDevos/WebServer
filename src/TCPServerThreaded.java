@@ -8,7 +8,7 @@ class TCPServerThreaded
 	public static void main(String argv[]) throws Exception
 	{
 		ServerSocket serverSocket = new ServerSocket(6789);
-		ThreadPool threadPool = new ThreadPool(1);
+		ThreadPool threadPool = new ThreadPool(10);
 		while (true)
 		{
 			Socket connectionSocket = serverSocket.accept();

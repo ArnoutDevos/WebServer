@@ -59,6 +59,8 @@ class TCPClient11
 			while(!inFromServer.ready()){
 				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
 				outToServer.flush();
+				if(t.equals(""))
+					Thread.sleep(1000);
 				System.out.println("REQUEST WAS: " + t);
 			}
 			//Start Pipeline test
