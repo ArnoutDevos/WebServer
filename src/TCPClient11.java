@@ -151,6 +151,8 @@ class TCPClient11
 			System.out.println("All requests sent. Waiting for piped responses");
 			while(lookForData(connections));
 			System.out.println("All responses received. Please put in new requests!");
+			outToServer.close();
+			inFromServer.close();
 			}
 		}
 	private static boolean lookForData(

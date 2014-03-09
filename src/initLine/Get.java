@@ -27,6 +27,25 @@ public class Get extends Head {
 		return data;
 	}
 
+	public String getResponse(){
+		String output = super.getResponse() + "\r\n";
+		try{
+			String fileName = clientSentence[1];
+			if(fileName.contains("/"))
+				fileName = fileName.substring(1);
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			 String line = null;
+			 while ((line = br.readLine()) != null) {
+			   output += line + "\n";
+			 }
+			 br.close();
+		}catch(Exception e){
+			output += "404 Not Found";
+		}
+		 return output;
+	}
+	
+	
 	public int[] readFile(String fileName)
 			throws FileNotFoundException, IOException {
 		int[] data;
@@ -57,10 +76,11 @@ public class Get extends Head {
 	
 	@Override
 	public void execute() throws IOException{
-		int[] data = getData();
-		outToClient.writeBytes(super.getResponse());
-		for(int i : data){
-			outToClient.writeByte(i);
-		}
+		outToClient.writeBytes(getResponse());
+//		int[] data = getData();
+//		outToClient.writeBytes(super.getResponse());
+//		for(int i : data){
+//			outToClient.writeByte(i);
+//		}
 	}
 }
