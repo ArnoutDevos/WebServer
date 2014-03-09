@@ -77,9 +77,11 @@ class TCPClient11
 				//System.out.println(tmp+"\n");
 			}
 			System.out.println(sBuffer);
-			clientSocket.getInputStream().close();
-			clientSocket.getOutputStream().close();
-			clientSocket.close();
+			outToServer.close();
+			inFromServer.close();
+//			clientSocket.getInputStream().close();
+//			clientSocket.getOutputStream().close();
+//			clientSocket.close();
 			
 			Document doc = Jsoup.parse(sBuffer.toString());
 			Elements media = doc.select("[src]");
@@ -111,6 +113,9 @@ class TCPClient11
 				
 				if(connections.containsKey(temp)){
 					clientSocketEmbedded = (Socket) connections.get(temp).getFirst(); // already a persistent connection to server
+				}
+				else if(temp.equals("localhost")){
+					clientSocketEmbedded = clientSocket;
 				}
 				else{
 					clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80); //no connection before with this server
