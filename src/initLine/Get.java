@@ -40,7 +40,7 @@ public class Get extends Head {
 			 }
 			 br.close();
 		}catch(Exception e){
-			output += "404 Not Found";
+			output += "<html><head></head><body>404 Not Found</body></html>";
 		}
 		 return output;
 	}

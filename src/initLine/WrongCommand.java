@@ -17,7 +17,7 @@ public class WrongCommand extends Command {
 		String glued = "";
 		for(int i = 0; i < clientSentence.length; i++)
 			glued += clientSentence[i] + " ";
-		return "500 Server Error \nWrong command! \n" + glued + "\n" + super.getResponse();
+		return "<html><head></head><body>500 Server Error \nWrong command! \n" + glued + "\n" + super.getResponse()+"</body></html>";
 	}
 	
 	public void execute() throws IOException{
