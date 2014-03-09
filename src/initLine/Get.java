@@ -2,14 +2,24 @@ package initLine;
 
 import java.io.*;
 
-//import org.apache.commons.io.FileUtils;
-
+/**
+ * This class represents the get-command. It inherits from the head-class.
+ * 
+ * @author Jakob
+ *
+ */
 public class Get extends Head {
 	
-	
+	/**
+	 * Constructor of the get-command. It's similar to the head-constructor.
+	 * 
+	 * @param clientSentence
+	 * @param outToClient
+	 */
 	public Get(String[] clientSentence, DataOutputStream outToClient){
 		super(clientSentence, outToClient);
 	}
+	
 	
 	public int[] getData(){
 		int[] data;
@@ -27,6 +37,13 @@ public class Get extends Head {
 		return data;
 	}
 
+	/**
+	 * This method returns a string with the information expected from a get-command.
+	 * 
+	 * @return	A string containing the header with information about the file as in 
+	 * 			the head-class. It also contains a string representation of the needed file
+	 * 			or a '404 Not Found' message if the file doesn't exist.
+	 */
 	public String getResponse(){
 		String output = super.getResponse() + "\r\n";
 		try{
@@ -36,7 +53,7 @@ public class Get extends Head {
 			BufferedReader br = new BufferedReader(new FileReader(fileName));
 			 String line = null;
 			 while ((line = br.readLine()) != null) {
-			   output += line + "\n";
+			   output += line + "\r\n";
 			 }
 			 br.close();
 		}catch(Exception e){

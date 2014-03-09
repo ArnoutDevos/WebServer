@@ -61,7 +61,7 @@ class TCPClient11
 			String t;
 			
 			while(!inFromServer.ready()){
-				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
+				outToServer.writeBytes((t = inFromUser.readLine()) + "\r\n");
 				outToServer.flush();
 				if(t.equals(""))
 					Thread.sleep(1000);

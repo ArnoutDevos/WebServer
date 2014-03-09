@@ -26,9 +26,10 @@ public class Handler implements Runnable
 		this.outToClient = new DataOutputStream
 				(connectionSocket.getOutputStream());
 		//Let another method do the input/output processin
-		processIO();
+		while(!connectionSocket.isClosed())
+			processIO();
 		}
-		catch(IOException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 		
@@ -36,24 +37,29 @@ public class Handler implements Runnable
 	
 	
 
-	private void processIO() throws IOException {
+	private void processIO() throws IOException, InterruptedException {
 
 		String input = "";
 		String clientSentence = "";
+		while(!inFromClient.ready())
+			Thread.sleep(100);
 		while((input = inFromClient.readLine()) != null && !input.equals("")){
 			clientSentence += input + " ";
 		}
 		System.out.println("Received: " + clientSentence);
 	
-		Command command = makeCommand(clientSentence);
+		String[] tokens = clientSentence.split(" ");
+		Command command = makeCommand(tokens, clientSentence);
 		command.execute();
 //		System.out.println("after command.execute().");
 		//The next two lines have to be comment when using our own client
 //		outToClient.write('\u001A');
 		outToClient.writeBytes("\r\n\r\n");
 		outToClient.flush();
-//		outToClient.close(); //close if HTTP/1.0
-//		inFromClient.close();
+		if(!isHTTP11(tokens)){
+			outToClient.close(); //close if HTTP/1.0
+			inFromClient.close();
+		}
 //		connectionSocket.shutdownOutput();
 //		connectionSocket.shutdownInput();
 		// sluiten als 
@@ -61,8 +67,7 @@ public class Handler implements Runnable
 //		System.out.println("Connection closed.");
 	}
 
-	private Command makeCommand(String clientSentence) {
-		String[] tokens = clientSentence.split(" ");
+	private Command makeCommand(String[] tokens, String clientSentence) {
 		String command = tokens[0];
 		if(wrongCommand(tokens, clientSentence))
 			return new WrongCommand(tokens, outToClient);
@@ -79,9 +84,15 @@ public class Handler implements Runnable
 	
 	//fault with http version
 	private boolean wrongCommand(String[] tokens, String clientSentence){
-		if(tokens.length < 3 || (tokens[2].equals("HTTP/1.1") && !clientSentence.contains("Host:")) ||
+		if( clientSentence.isEmpty() || (isHTTP11(tokens) && !clientSentence.contains("Host:")) ||
 				(!tokens[2].equals("HTTP/1.0") && !tokens[2].equals("HTTP/1.1")))
 			return true;
 		return false;
+	}
+	
+	private boolean isHTTP11(String[] tokens){
+		if(tokens.length < 3 || !(tokens[2].equals("HTTP/1.1")))
+			return false;
+		return true;
 	}
 }
