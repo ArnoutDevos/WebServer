@@ -38,6 +38,8 @@ class TCPClient10
 			while(!inFromServer.ready()){
 				outToServer.writeBytes((t = inFromUser.readLine()) + "\n");
 				outToServer.flush();
+				if(t.equals(""))
+					Thread.sleep(1000);
 				System.out.println("REQUEST WAS: " + t);
 			}
 			t = "";
@@ -62,7 +64,8 @@ class TCPClient10
 				temp = url.getHost();
 				System.out.println("sitetje = " + temp);
 				
-				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80);
+				//change port for internet
+				Socket clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 6789);
 				DataOutputStream outToServerEmbedded = new DataOutputStream
 						(clientSocketEmbedded.getOutputStream());
 

@@ -49,8 +49,11 @@ public class Handler implements Runnable
 		command.execute();
 //		System.out.println("after command.execute().");
 		//The next two lines have to be comment when using our own client
-		outToClient.close();
-		inFromClient.close();
+//		outToClient.write('\u001A');
+		outToClient.writeBytes("\r\n\r\n");
+		outToClient.flush();
+//		outToClient.close(); //close if HTTP/1.0
+//		inFromClient.close();
 //		connectionSocket.shutdownOutput();
 //		connectionSocket.shutdownInput();
 		

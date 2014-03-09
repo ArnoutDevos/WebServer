@@ -55,7 +55,7 @@ public class ThreadPool {
 	}
 	
 	/**
-	 * This method fills the threadPool whith waiting handlers from the handlerBucket.
+	 * This method fills the threadPool with waiting handlers from the handlerBucket.
 	 */
 	public void fillWithWaiting(){
 		while(!full() && !handlerBucket.isEmpty()){
