@@ -58,8 +58,12 @@ public class Handler implements Runnable
 		String[] tokens = clientSentence.split(" ");
 		Command command = makeCommand(tokens, clientSentence);
 		command.execute();
-		outToClient.writeBytes("\r\n\r\n");
-		outToClient.flush();
+		try{
+			outToClient.writeBytes("\r\n\r\n");
+			outToClient.flush();
+		}catch(Exception e){
+			
+		}
 		//If the HTTP-version is 1.0 close the connection.
 		if(!isHTTP11(tokens)){
 			outToClient.close();

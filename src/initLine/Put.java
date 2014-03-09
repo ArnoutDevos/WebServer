@@ -15,7 +15,7 @@ public class Put extends Head {
 	
 	@Override
 	public String getResponse() {
-		String output = "HTTP/1.0 ";
+		String output = clientSentence[2] + " ";
 		if(succes){
 			output += "201 Created";
 		} else

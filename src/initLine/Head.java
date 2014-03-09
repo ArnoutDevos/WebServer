@@ -41,7 +41,7 @@ public class Head extends Command{
 	 */
 	@Override
 	public String getResponse() {
-		String output = "HTTP/1.0 ";
+		String output = clientSentence[2] + " ";
 		String fileName = clientSentence[1];
 		if(fileName.contains("/"))
 			fileName = fileName.substring(1);
