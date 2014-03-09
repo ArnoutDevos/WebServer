@@ -25,11 +25,11 @@ class TCPClient11
 {
 	public static void main(String argv[]) throws Exception
 	{
-//		String adress = "www.arnoutdevos.net";
-//		int port = 80;
+		String adress = "www.arnoutdevos.net";
+		int port = 80;
 		
-		String adress = "localhost";
-		int port = 6789;
+//		String adress = "localhost";
+//		int port = 6789;
 		
 		if(argv.length == 2){
 			adress = argv[0];
@@ -39,25 +39,27 @@ class TCPClient11
 	    {
 			System.out.println("Wrong input arg. Now using default adress and port: "+adress+":"+port);
 	    }
+		LinkedHashMap<String, Connection> connections = new LinkedHashMap<String, Connection>();
+		BufferedReader inFromUser = new BufferedReader( new
+				InputStreamReader(System.in));
+		Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
+		
+//		LinkedList<Object> listje = new LinkedList<Object>();
+//		listje.add(clientSocket);
+//		listje.add(null);
+//		connections.put(adress, listje);
+		InputStream in = clientSocket.getInputStream();
+		OutputStream out = clientSocket.getOutputStream();
+		
+		Connection clientCon = new Connection(clientSocket, in, out, null);
+		//connections.put(adress,clientCon);
+		
 		while(true){
-			LinkedHashMap<String, Connection> connections = new LinkedHashMap<String, Connection>();
-			BufferedReader inFromUser = new BufferedReader( new
-					InputStreamReader(System.in));
-			Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
-			
-//			LinkedList<Object> listje = new LinkedList<Object>();
-//			listje.add(clientSocket);
-//			listje.add(null);
-//			connections.put(adress, listje);
-			InputStream in = clientSocket.getInputStream();
-			OutputStream out = clientSocket.getOutputStream();
-			
-			Connection clientCon = new Connection(clientSocket, in, out, null);
-			//connections.put(adress,clientCon);
+
 			DataOutputStream outToServer = new DataOutputStream
-					(out);
+					(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new
-					InputStreamReader(in));
+					InputStreamReader(clientSocket.getInputStream()));
 			String t;
 			
 			while(!inFromServer.ready()){
@@ -151,8 +153,8 @@ class TCPClient11
 			System.out.println("All requests sent. Waiting for piped responses");
 			while(lookForData(connections));
 			System.out.println("All responses received. Please put in new requests!");
-			outToServer.close();
-			inFromServer.close();
+//			outToServer.close();
+//			inFromServer.close();
 			}
 		}
 	private static boolean lookForData(
@@ -184,9 +186,9 @@ class TCPClient11
 //			inputStream.close();
 			if(!possibleReader.ready()){
 				connections.remove(con);
-				con.getInput().close();
-				con.getOutput().close();
-				con.getSocket().close();
+//				con.getInput().close();
+//				con.getOutput().close();
+//				con.getSocket().close();
 			}
 			itr.remove();
 			System.out.println("Done!");
