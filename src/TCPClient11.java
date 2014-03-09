@@ -40,7 +40,7 @@ class TCPClient11
 			System.out.println("Wrong input arg. Now using default adress and port: "+adress+":"+port);
 	    }
 		while(true){
-			LinkedHashMap<String, LinkedList<Object>> connections = new LinkedHashMap<String, LinkedList<Object>>();
+			LinkedHashMap<String, Connection> connections = new LinkedHashMap<String, Connection>();
 			BufferedReader inFromUser = new BufferedReader( new
 					InputStreamReader(System.in));
 			Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
@@ -49,11 +49,15 @@ class TCPClient11
 //			listje.add(clientSocket);
 //			listje.add(null);
 //			connections.put(adress, listje);
+			InputStream in = clientSocket.getInputStream();
+			OutputStream out = clientSocket.getOutputStream();
 			
+			Connection clientCon = new Connection(clientSocket, in, out, null);
+			//connections.put(adress,clientCon);
 			DataOutputStream outToServer = new DataOutputStream
-					(clientSocket.getOutputStream());
+					(out);
 			BufferedReader inFromServer = new BufferedReader(new
-					InputStreamReader(clientSocket.getInputStream()));
+					InputStreamReader(in));
 			String t;
 			
 			while(!inFromServer.ready()){
@@ -77,7 +81,8 @@ class TCPClient11
 				//System.out.println(tmp+"\n");
 			}
 			System.out.println(sBuffer);
-
+//			outToServer.close();
+//			inFromServer.close();
 //			clientSocket.getInputStream().close();
 //			clientSocket.getOutputStream().close();
 //			clientSocket.close();
@@ -109,23 +114,30 @@ class TCPClient11
 				
 				Socket clientSocketEmbedded;
 				DataOutputStream outToServerEmbedded;
+				Connection conEmbedded;
 				
 				if(connections.containsKey(temp)){
-					clientSocketEmbedded = (Socket) connections.get(temp).getFirst(); // already a persistent connection to server
+					conEmbedded = connections.get(temp);
+					//clientSocketEmbedded = (Socket) connections.get(temp).getFirst(); // already a persistent connection to server
 				}
 				else if(temp.equals("localhost")){
-					clientSocketEmbedded = clientSocket;
+					conEmbedded = new Connection(clientCon.getSocket(), clientCon.getInput(), clientCon.getOutput(), file);
 				}
 				else{
+					System.out.println(temp);
 					clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80); //no connection before with this server
+//					outToServerEmbedded = new DataOutputStream
+//							(clientSocketEmbedded.getOutputStream());
+					conEmbedded = new Connection(clientSocketEmbedded, clientSocketEmbedded.getInputStream(), clientSocketEmbedded.getOutputStream(), file);
 				}
-				LinkedList<Object> listje = new LinkedList<Object>();
-				listje.add(clientSocketEmbedded);
-				listje.add(file);
-				connections.put(temp, listje);
+				
+//				LinkedList<Object> listje = new LinkedList<Object>();
+//				listje.add(clientSocketEmbedded);
+//				listje.add(file);
+				connections.put(temp, conEmbedded);
 				
 				outToServerEmbedded = new DataOutputStream
-						(clientSocketEmbedded.getOutputStream());
+						(conEmbedded.getOutput());
 
 				String request = "GET " + url.getPath() + " HTTP/1.1\r\n"+"Host: " + temp + "\r\n\r\n";
 				System.out.println("Request: "+request);
@@ -144,20 +156,23 @@ class TCPClient11
 			}
 		}
 	private static boolean lookForData(
-			LinkedHashMap<String, LinkedList<Object>> connections) throws IOException, FileNotFoundException {
+			LinkedHashMap<String, Connection> connections) throws IOException, FileNotFoundException {
 		Boolean result = true;
 		InputStream inputStream;
 		OutputStream outputStream;
 		File file;
 		if(!connections.isEmpty()){
-		Iterator<Entry<String, LinkedList<Object>>> itr = connections.entrySet().iterator();
-		LinkedList<Object> lijstje = (LinkedList<Object>) itr.next().getValue();
-		Socket possibleConnection = (Socket) lijstje.getFirst();
-		file = (File) lijstje.getLast();
+		Iterator<Entry<String, Connection>> itr = connections.entrySet().iterator();
+//		itr.next();//Hop over the first connection.
+//		if(!itr.hasNext()) return false;
+		Connection con = itr.next().getValue();
 		
-		BufferedReader possibleReader = new BufferedReader(new InputStreamReader(possibleConnection.getInputStream()));
+		Socket possibleConnection = con.getSocket();
+		file = con.getFile();
+		
+		BufferedReader possibleReader = new BufferedReader(new InputStreamReader(con.getInput()));
 		if(possibleReader.ready()){
-			inputStream = possibleConnection.getInputStream();
+			inputStream = con.getInput();
 			//inputList.add(inputStream);
 			// write the inputStream to a FileOutputStream
 			outputStream = new FileOutputStream(file.getAbsoluteFile());
@@ -165,12 +180,13 @@ class TCPClient11
  
 			writeFromTo(inputStream, outputStream);
 			 
-			outputStream.close();
-			inputStream.close();
+//			outputStream.close();
+//			inputStream.close();
 			if(!possibleReader.ready()){
-				possibleConnection.getInputStream().close();
-				possibleConnection.getOutputStream().close();
-				possibleConnection.close();
+				connections.remove(con);
+				con.getInput().close();
+				con.getOutput().close();
+				con.getSocket().close();
 			}
 			itr.remove();
 			System.out.println("Done!");
@@ -218,6 +234,7 @@ class TCPClient11
 				length = length-read; //Prevent other requests on inputstream to be read
 				out.write(bytes, 0, read);
 			}
+			//out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

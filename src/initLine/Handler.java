@@ -38,7 +38,6 @@ public class Handler implements Runnable
 
 	private void processIO() throws IOException {
 
-		
 		String input = "";
 		String clientSentence = "";
 		while((input = inFromClient.readLine()) != null && !input.equals("")){
@@ -52,6 +51,9 @@ public class Handler implements Runnable
 		//The next two lines have to be comment when using our own client
 		outToClient.close();
 		inFromClient.close();
+//		connectionSocket.shutdownOutput();
+//		connectionSocket.shutdownInput();
+		
 		// sluiten als 
 //		connectionSocket.close();
 //		System.out.println("Connection closed.");
@@ -59,7 +61,7 @@ public class Handler implements Runnable
 
 	private Command makeCommand(String clientSentence) {
 		String[] tokens = clientSentence.split(" ");
-		String command = tokens[0].toUpperCase();
+		String command = tokens[0];
 		if(wrongCommand(tokens, clientSentence))
 			return new WrongCommand(tokens, outToClient);
 		if(command.equals("HEAD"))
