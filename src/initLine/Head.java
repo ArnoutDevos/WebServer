@@ -38,6 +38,7 @@ public class Head extends Command{
 	@Override
 	public void execute() throws IOException{
 		outToClient.write(getResponse().getBytes());
+		outToClient.flush();
 	}
 	
 	public String makeExtension(String fileName){

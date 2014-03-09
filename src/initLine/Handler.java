@@ -56,7 +56,6 @@ public class Handler implements Runnable
 //		inFromClient.close();
 //		connectionSocket.shutdownOutput();
 //		connectionSocket.shutdownInput();
-		
 		// sluiten als 
 //		connectionSocket.close();
 //		System.out.println("Connection closed.");
