@@ -1,9 +1,9 @@
-package initLine;
+package command;
 
 import java.io.*;
 
 /**
- * This class represents the get-command. It inherits from the head-class.
+ * This class represents the Get-command. It inherits from the Head-class.
  * 
  * @author Jakob
  *
@@ -11,7 +11,7 @@ import java.io.*;
 public class Get extends Head {
 	
 	/**
-	 * Constructor of the get-command. It's similar to the head-constructor.
+	 * Constructor of the Get-command. It's similar to the Head-constructor.
 	 * 
 	 * @param clientSentence
 	 * @param outToClient

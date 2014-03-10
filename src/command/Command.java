@@ -1,4 +1,4 @@
-package initLine;
+package command;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

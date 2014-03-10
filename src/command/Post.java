@@ -1,7 +1,12 @@
-package initLine;
+package command;
 
 import java.io.*;
 
+/**
+ * This class represents a Post-command.
+ * @author Jakob
+ *
+ */
 public class Post extends Put {
 
 	public Post(String[] clientSentence, DataOutputStream outToClient, BufferedReader inFromClient){
@@ -11,7 +16,7 @@ public class Post extends Put {
 	@Override
 	public String getResponse() {
 		String output = clientSentence[2] + " ";
-		if(succes){
+		if(success){
 			output += "200 Ok";
 		} else
 			output += "500 Server Error";
@@ -23,7 +28,7 @@ public class Post extends Put {
 	
 	@Override
 	public void execute() throws IOException{
-		succes = false; //to indicate whether the file upload was succesful.
+		success = false; //to indicate whether the file upload was succesful.
 		body = "";
 		String input;
 		body = "Posted at: " + getDate() + "\n";
@@ -34,9 +39,9 @@ public class Post extends Put {
 		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(clientSentence[1], true)));
 		    out.println(body);
 		    out.close();
-		    succes = true;
+		    success = true;
 		} catch (IOException e) {
-			succes = false;
+			success = false;
 		}
 		
 		outToClient.writeBytes(getResponse());
