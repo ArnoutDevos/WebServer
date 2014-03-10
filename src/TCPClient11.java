@@ -1,10 +1,7 @@
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.jsoup.Jsoup;
@@ -32,6 +29,11 @@ import org.jsoup.select.Elements;
  */
 class TCPClient11
 {
+	/**
+	 * Main method to call to initiate connection with the server.
+	 * @param argv syntax: "host port" e.g. "localhost 6789"
+	 * @throws Exception
+	 */
 	public static void main(String argv[]) throws Exception
 	{
 //		String adress = "www.arnoutdevos.net";
@@ -42,7 +44,7 @@ class TCPClient11
 
 		if(argv.length == 2){
 			adress = argv[0];
-			adress = argv[1];
+			port = Integer.parseInt(argv[1]);
 		}
 		else
 		{
@@ -52,61 +54,55 @@ class TCPClient11
 		BufferedReader inFromUser = new BufferedReader( new
 				InputStreamReader(System.in));
 		Socket clientSocket = new Socket(InetAddress.getByName(adress), port);
-
-		//		LinkedList<Object> listje = new LinkedList<Object>();
-		//		listje.add(clientSocket);
-		//		listje.add(null);
-		//		connections.put(adress, listje);
 		InputStream in = clientSocket.getInputStream();
 		OutputStream out = clientSocket.getOutputStream();
 
 		Connection clientCon = new Connection(clientSocket, in, out, null);
-		//connections.put(adress,clientCon);
-
+		boolean persistent = false;
+		DataOutputStream outToServer = new DataOutputStream
+				(out);
+		BufferedReader inFromServer = new BufferedReader(new
+				InputStreamReader(in));
 		while(true){
-
-			DataOutputStream outToServer = new DataOutputStream
-					(clientSocket.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new
-					InputStreamReader(clientSocket.getInputStream()));
+			
 			String t;
-
+			int i = 0;
 			while(!inFromServer.ready()){
-				outToServer.writeBytes((t = inFromUser.readLine()) + "\r\n");
+				
+					t = inFromUser.readLine();
+				outToServer.writeBytes((t) + "\r\n");
 				outToServer.flush();
+				if(t.length()-8 > 0 && t.substring(t.length()-8).equals("HTTP/1.1") && i==0){
+					persistent = true;
+				}
 				if(t.equals(""))
 					Thread.sleep(1000);
 				System.out.println("REQUEST WAS: " + t);
+				i++;//counter to know which line is command and which line is header
+				
 			}
+			System.out.println("Using persistent mode:"+persistent);
 			//Start Pipeline test
 			//			String u = "GET / HTTP/1.1\r\n"+"Host: " + adress + "\r\n\r\n";
 			//			outToServer.writeBytes(u);//Pipeline test
 			//			System.out.println("PIPE REQUEST WAS: " + u);
 			//Stop Pipeline test
 			//t = "";
-			String tmp;
 			System.out.println("Retrieving file.");
 			StringBuilder sBuffer = new StringBuilder();
 			while(inFromServer.ready()){
-				sBuffer.append(tmp = inFromServer.readLine() + "\n");
-				//System.out.println(tmp+"\n");
+				sBuffer.append(inFromServer.readLine() + "\n");
 			}
 			System.out.println(sBuffer);
-			//			outToServer.close();
-			//			inFromServer.close();
-			//			clientSocket.getInputStream().close();
-			//			clientSocket.getOutputStream().close();
-			//			clientSocket.close();
 
+			if(!persistent){
+				break;
+			}
 			Document doc = Jsoup.parse(sBuffer.toString());
 			Elements media = doc.select("[src]");
 			System.out.println("Retrieving embedded elements.");
 
-			//			LinkedList<OutputStream> fileList = new LinkedList<OutputStream>();
-			//			LinkedList<InputStream> inputList = new LinkedList<InputStream>();
 
-			InputStream inputStream = null;
-			OutputStream outputStream = null;
 
 			for (Element src : media) {
 				String temp = src.absUrl("src");
@@ -129,7 +125,6 @@ class TCPClient11
 
 				if(connections.containsKey(temp)){
 					conEmbedded = connections.get(temp);
-					//clientSocketEmbedded = (Socket) connections.get(temp).getFirst(); // already a persistent connection to server
 				}
 				else if(temp.equals("localhost")){
 					conEmbedded = new Connection(clientCon.getSocket(), clientCon.getInput(), clientCon.getOutput(), file);
@@ -137,14 +132,8 @@ class TCPClient11
 				else{
 					System.out.println(temp);
 					clientSocketEmbedded = new Socket(InetAddress.getByName(temp), 80); //no connection before with this server
-					//					outToServerEmbedded = new DataOutputStream
-					//							(clientSocketEmbedded.getOutputStream());
 					conEmbedded = new Connection(clientSocketEmbedded, clientSocketEmbedded.getInputStream(), clientSocketEmbedded.getOutputStream(), file);
 				}
-
-				//				LinkedList<Object> listje = new LinkedList<Object>();
-				//				listje.add(clientSocketEmbedded);
-				//				listje.add(file);
 				connections.put(temp, conEmbedded);
 
 				outToServerEmbedded = new DataOutputStream
@@ -154,16 +143,15 @@ class TCPClient11
 				System.out.println("Request: "+request);
 				outToServerEmbedded.writeBytes(request);
 				outToServer.flush();
-
 				//java.util.concurrent.TimeUnit.SECONDS.sleep(1);//Disable the pipeline
 				lookForData(connections);
-				//clientSocketEmbedded.close();
 			}
 			System.out.println("All requests sent. Waiting for piped responses");
 			while(lookForData(connections));
+			if(!persistent){
+				clientSocket.close();
+			}
 			System.out.println("All responses received. Please put in new requests!");
-			//			outToServer.close();
-			//			inFromServer.close();
 		}
 	}
 	/**
@@ -180,30 +168,18 @@ class TCPClient11
 		File file;
 		if(!connections.isEmpty()){
 			Iterator<Entry<String, Connection>> itr = connections.entrySet().iterator();
-			//		itr.next();//Hop over the first connection.
-			//		if(!itr.hasNext()) return false;
 			Connection con = itr.next().getValue();
-
-			Socket possibleConnection = con.getSocket();
 			file = con.getFile();
 
 			BufferedReader possibleReader = new BufferedReader(new InputStreamReader(con.getInput()));
 			if(possibleReader.ready()){
 				inputStream = con.getInput();
-				//inputList.add(inputStream);
-				// write the inputStream to a FileOutputStream
 				outputStream = new FileOutputStream(file.getAbsoluteFile());
-				//fileList.add(outputStream);
 
 				writeFromTo(inputStream, outputStream);
 
-				//			outputStream.close();
-				//			inputStream.close();
 				if(!possibleReader.ready()){
 					connections.remove(con);
-					//				con.getInput().close();
-					//				con.getOutput().close();
-					//				con.getSocket().close();
 				}
 				itr.remove();
 				System.out.println("Done!");
@@ -215,6 +191,11 @@ class TCPClient11
 		}
 		return result;
 	}
+	/**
+	 * This method writes from a given InputStream to a given OutputStream which is in most cases a file.
+	 * @param in InputStream to read the data from.
+	 * @param out OutputStream to write the data to.
+	 */
 	private static void writeFromTo(InputStream in, OutputStream out){
 		int read = 0;
 		int offset = 0;
@@ -251,11 +232,15 @@ class TCPClient11
 				length = length-read; //Prevent other requests on inputstream to be read
 				out.write(bytes, 0, read);
 			}
-			//out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * This method returns a filename contained in a string. Mostly used to extract the exact filename from a full path URI.
+	 * @param path The path out of which the filename needs to be extracted.
+	 * @return The filename of the file e.g. /path/to/file/file.ext --> file.ext
+	 */
 	private static String extractFileName(String path) {
 		    if ( path == null)
 		      return null;

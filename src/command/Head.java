@@ -53,6 +53,7 @@ public class Head extends Command{
 //			output += "\n" + "Cache-Control: max-age=86400, public";
 		} else {
 			output += "404 Not Found";
+			output += "\r\n" + "Content-type: text/html";
 		}
 		
 		output += "\r\n" + super.getResponse();
