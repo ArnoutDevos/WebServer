@@ -1,6 +1,7 @@
 import java.net.*;
 
-import initLine.Handler;
+import command.Handler;
+
 //comment
 //server should close the client socket.
 class TCPServerThreaded
