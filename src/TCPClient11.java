@@ -72,8 +72,11 @@ class TCPClient11
 					t = inFromUser.readLine();
 				outToServer.writeBytes((t) + "\r\n");
 				outToServer.flush();
-				if(t.length()-8 > 0 && t.substring(t.length()-8).equals("HTTP/1.1") && i==0){
-					persistent = true;
+				if(t.length()-8 > 0 && i==0){
+					if(t.substring(t.length()-8).equals("HTTP/1.1"))
+						persistent = true;
+					else
+						persistent = false;
 				}
 				if(t.equals(""))
 					Thread.sleep(1000);
